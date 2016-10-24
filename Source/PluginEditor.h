@@ -42,10 +42,11 @@ private:
     // access the processor object that created it.
     Hw3AudioProcessor& processor;
     
-    class moduleSlidersObject {
-        public:
-            Slider *level;
-            Slider *tune;
+    struct moduleSlidersObject {
+        Slider *levelSlider;
+        Slider *tuneSlider;
+        double level;
+        int tune;
     };
 
     Tab edit, perform;
@@ -56,6 +57,9 @@ private:
     MouseListener *mouse;
     
     OwnedArray<moduleSlidersObject> modules;
+    
+    int numModules;
+    int slidersPerModule;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Hw3AudioProcessorEditor)
 };

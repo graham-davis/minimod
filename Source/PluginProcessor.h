@@ -12,6 +12,8 @@
 #define PLUGINPROCESSOR_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "./SynthSound.h"
+#include "./SynthVoice.h"
 
 
 //==============================================================================
@@ -55,8 +57,21 @@ public:
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    
+    //===============================================================================
+    void updateModuleLevel(int index, float newLevel);
+    void updateModuleTune(int index, int newTune);
 
 private:
+    struct synthModuleControl {
+        int tune;
+        double level;
+    };
+    
+    OwnedArray<synthModuleControl> synthModules;
+    
+    Synthesiser synth;
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Hw3AudioProcessor)
 };

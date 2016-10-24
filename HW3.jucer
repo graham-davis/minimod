@@ -11,6 +11,8 @@
               jucerVersion="4.2.4">
   <MAINGROUP id="yyE084" name="HW3">
     <GROUP id="{8B2B1700-778E-31AE-AAAD-7D3E29830ACE}" name="Source">
+      <FILE id="iXif8M" name="SynthSound.h" compile="0" resource="0" file="Source/SynthSound.h"/>
+      <FILE id="sHkArg" name="SynthVoice.h" compile="0" resource="0" file="Source/SynthVoice.h"/>
       <FILE id="GdDbAY" name="SynthModule.h" compile="0" resource="0" file="Source/SynthModule.h"/>
       <FILE id="xFHIej" name="Edit.h" compile="0" resource="0" file="Source/Edit.h"/>
       <FILE id="AuvKNG" name="Perform.h" compile="0" resource="0" file="Source/Perform.h"/>

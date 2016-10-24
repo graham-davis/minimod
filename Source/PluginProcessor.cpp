@@ -15,6 +15,22 @@
 //==============================================================================
 Hw3AudioProcessor::Hw3AudioProcessor()
 {
+    // Initialize synth module control listeners
+    for (int i=0; i<4; i++) {
+        synthModuleControl *newSynthModule = new synthModuleControl;
+        newSynthModule->level = .5;
+        newSynthModule->tune = 0;
+        synthModules.add(newSynthModule);
+    }
+    
+    // Initialize synthesizer voices and sound
+    int numVoices = 4;
+    for (int i=numVoices; --i >= 0;)
+    {
+        synth.addVoice(new SynthVoice());
+    }
+    synth.clearSounds();
+    synth.addSound(new SynthSound());
 }
 
 Hw3AudioProcessor::~Hw3AudioProcessor()
@@ -125,7 +141,7 @@ void Hw3AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& mid
     // this code if your algorithm always overwrites all the output channels.
     for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
-
+    
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
@@ -166,4 +182,16 @@ void Hw3AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new Hw3AudioProcessor();
+}
+
+//==============================================================================
+void Hw3AudioProcessor::updateModuleLevel(int index, float newLevel) {
+    synthModules[index]->level = newLevel;
+    std::cout << "Module: " << index << "Level: " << newLevel << std::endl;
+}
+
+void Hw3AudioProcessor::updateModuleTune(int index, int newTune) {
+    synthModules[index]->tune = newTune;
+    std::cout << "Module: " << index << "Tune: " << newTune << std::endl;
+
 }

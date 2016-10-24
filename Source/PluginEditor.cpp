@@ -16,22 +16,24 @@
 Hw3AudioProcessorEditor::Hw3AudioProcessorEditor (Hw3AudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
+    numModules = 4;
+    slidersPerModule = 2;
     
     // Set up tabs and mouse listeners
     mouse = new MouseListener;
     this->addMouseListener(mouse, true);
     
     // Set up listeners for modules and their sliders
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < numModules; i++) {
         SynthModule *module = editScene.getModule(i);
         moduleSlidersObject *sliderObj = new moduleSlidersObject;
-        Slider *levelSlider = module->getSlider(0);
-        Slider *tuneSlider = module->getSlider(1);
-        levelSlider->addListener(this);
-        tuneSlider->addListener(this);
+        Slider *levelSliderP = module->getSlider(0);
+        Slider *tuneSliderP = module->getSlider(1);
+        levelSliderP->addListener(this);
+        tuneSliderP->addListener(this);
         
-        sliderObj->level = levelSlider;
-        sliderObj->tune = tuneSlider;
+        sliderObj->levelSlider = levelSliderP;
+        sliderObj->tuneSlider = tuneSliderP;
         modules.add(sliderObj);
     }
     
@@ -98,5 +100,13 @@ void Hw3AudioProcessorEditor::mouseDown (const MouseEvent &e)
 
 void Hw3AudioProcessorEditor::sliderValueChanged(Slider *slider)
 {
-    std::cout << slider->getValue() << std::endl;
+    for (int i = 0; i < numModules; i++) {
+        if (slider == modules[i]->levelSlider) {
+            modules[i]->level = modules[i]->levelSlider->getValue();
+            processor.updateModuleLevel(i, modules[i]->level);
+        } else if (slider == modules[i]->tuneSlider) {
+            modules[i]->tune = modules[i]->tuneSlider->getValue();
+            processor.updateModuleTune(i, modules[i]->tune);
+        }
+    }
 }
