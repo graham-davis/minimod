@@ -2,15 +2,17 @@
 
 <JUCERPROJECT id="EpBGJg" name="HW3" projectType="audioplug" version="1.0.0"
               bundleIdentifier="com.yourcompany.HW3" includeBinaryInAppConfig="1"
-              buildVST="1" buildVST3="0" buildAU="1" buildAUv3="0" buildRTAS="0"
+              buildVST="0" buildVST3="0" buildAU="1" buildAUv3="0" buildRTAS="0"
               buildAAX="0" pluginName="HW3" pluginDesc="HW3" pluginManufacturer="yourcompany"
               pluginManufacturerCode="Manu" pluginCode="Epbg" pluginChannelConfigs=""
-              pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
+              pluginIsSynth="1" pluginWantsMidiIn="1" pluginProducesMidiOut="0"
               pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="HW3AU"
               pluginRTASCategory="" aaxIdentifier="com.yourcompany.HW3" pluginAAXCategory="AAX_ePlugInCategory_Dynamics"
               jucerVersion="4.2.4">
   <MAINGROUP id="yyE084" name="HW3">
     <GROUP id="{8B2B1700-778E-31AE-AAAD-7D3E29830ACE}" name="Source">
+      <FILE id="OpJ8gj" name="Sine.h" compile="0" resource="0" file="Source/Sine.h"/>
+      <FILE id="FOyStU" name="Smooth.h" compile="0" resource="0" file="Source/Smooth.h"/>
       <FILE id="iXif8M" name="SynthSound.h" compile="0" resource="0" file="Source/SynthSound.h"/>
       <FILE id="sHkArg" name="SynthVoice.h" compile="0" resource="0" file="Source/SynthVoice.h"/>
       <FILE id="GdDbAY" name="SynthModule.h" compile="0" resource="0" file="Source/SynthModule.h"/>

@@ -62,15 +62,9 @@ public:
     void updateModuleLevel(int index, float newLevel);
     void updateModuleTune(int index, int newTune);
 
-private:
-    struct synthModuleControl {
-        int tune;
-        double level;
-    };
-    
-    OwnedArray<synthModuleControl> synthModules;
-    
+private:    
     Synthesiser synth;
+    int numVoices;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Hw3AudioProcessor)

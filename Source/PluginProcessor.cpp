@@ -15,19 +15,12 @@
 //==============================================================================
 Hw3AudioProcessor::Hw3AudioProcessor()
 {
-    // Initialize synth module control listeners
-    for (int i=0; i<4; i++) {
-        synthModuleControl *newSynthModule = new synthModuleControl;
-        newSynthModule->level = .5;
-        newSynthModule->tune = 0;
-        synthModules.add(newSynthModule);
-    }
-    
     // Initialize synthesizer voices and sound
-    int numVoices = 4;
+    numVoices = 4;
     for (int i=numVoices; --i >= 0;)
     {
-        synth.addVoice(new SynthVoice());
+        SynthVoice *voice = new SynthVoice;
+        synth.addVoice(voice);
     }
     synth.clearSounds();
     synth.addSound(new SynthSound());
@@ -93,8 +86,7 @@ void Hw3AudioProcessor::changeProgramName (int index, const String& newName)
 //==============================================================================
 void Hw3AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    synth.setCurrentPlaybackSampleRate (sampleRate);
 }
 
 void Hw3AudioProcessor::releaseResources()
@@ -142,14 +134,15 @@ void Hw3AudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& mid
     for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        float* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
-    }
+//    // This is the place where you'd normally do the guts of your plugin's
+//    // audio processing...
+//    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+//    {
+//        float* channelData = buffer.getWritePointer (channel);
+//
+//        // ..do something to the data...
+//    }
+    synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
 }
 
 //==============================================================================
@@ -186,12 +179,15 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 
 //==============================================================================
 void Hw3AudioProcessor::updateModuleLevel(int index, float newLevel) {
-    synthModules[index]->level = newLevel;
-    std::cout << "Module: " << index << "Level: " << newLevel << std::endl;
+    for (int i=0; i<numVoices; i++) {
+        SynthVoice *voice = (SynthVoice *)synth.getVoice(i);
+        voice->updateLevel(index, newLevel);
+    }
 }
 
 void Hw3AudioProcessor::updateModuleTune(int index, int newTune) {
-    synthModules[index]->tune = newTune;
-    std::cout << "Module: " << index << "Tune: " << newTune << std::endl;
-
+    for (int i=0; i<numVoices; i++) {
+        SynthVoice *voice = (SynthVoice *)synth.getVoice(i);
+        voice->updateTune(index, newTune);
+    }
 }
