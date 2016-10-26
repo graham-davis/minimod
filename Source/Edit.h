@@ -16,8 +16,12 @@
 class Edit       : public Component{
 public:
     Edit(){
+        modules.add(new SynthModule("Sawtooth Wave"));
+        modules.add(new SynthModule("Sine Wave"));
+        modules.add(new SynthModule("Square Wave"));
+        modules.add(new SynthModule("Triangle Wave"));
+
         for (int i = 0; i < 4; i++) {
-            modules.add(new SynthModule);
             addAndMakeVisible(modules[i]);
         }
     }

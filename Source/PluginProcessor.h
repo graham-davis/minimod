@@ -62,7 +62,7 @@ public:
     void updateModuleLevel(int index, float newLevel);
     void updateModuleTune(int index, int newTune);
 
-private:    
+private:
     Synthesiser synth;
     int numVoices;
     

@@ -23,6 +23,7 @@ public:
     
     void paint (Graphics& g) override
     {
+        g.fillAll(Colours::black);
         if (engaged) {
             g.setColour(Colour::fromRGB(91, 199, 235));
         } else {

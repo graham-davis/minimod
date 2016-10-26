@@ -15,10 +15,16 @@ class SynthModule       :
 public Component {
 
 public:
-    SynthModule(){
+    SynthModule(String waveform){
         
         sliders.add(new Slider);
         sliders.add(new Slider);
+        
+        // Add header
+        addAndMakeVisible(headerLabel);
+        headerLabel.setText(waveform, dontSendNotification);
+        headerLabel.setColour(Label::ColourIds::textColourId, Colour::fromRGB(64, 71, 73));
+        headerLabel.setJustificationType(Justification::centred);
         
         // Add level meter
         addAndMakeVisible(sliders[0]);
@@ -64,10 +70,11 @@ public:
         int border = 10;
         Rectangle<int> area = getLocalBounds();
         {
-            Rectangle<int> rotaryArea = area.removeFromTop(sliderHeight + border*2).withTrimmedLeft(border).withTrimmedRight(border);
+            headerLabel.setBounds(area.removeFromTop(border*5));
+            Rectangle<int> rotaryArea = area.removeFromBottom(sliderHeight + border*2).withTrimmedLeft(border).withTrimmedRight(border);
             {
-                sliders[0]->setBounds(getWidth()/2 - border - sliderHeight, border*3, sliderHeight, sliderHeight);
-                sliders[1]->setBounds(getWidth()/2 + border, border*3, sliderHeight, sliderHeight);
+                sliders[0]->setBounds(getWidth()/2 - border - sliderHeight, getHeight()/2 - border*3, sliderHeight, sliderHeight);
+                sliders[1]->setBounds(getWidth()/2 + border, getHeight()/2 - border*3, sliderHeight, sliderHeight);
             }
         }
     }
@@ -78,7 +85,7 @@ public:
     
 private:
     OwnedArray<Slider> sliders;
-    Label levelLabel, tuneLabel;
+    Label levelLabel, tuneLabel, headerLabel;
 };
 
 

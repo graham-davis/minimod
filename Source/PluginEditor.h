@@ -60,7 +60,7 @@ private:
     
     int numModules;
     int slidersPerModule;
-
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Hw3AudioProcessorEditor)
 };
 

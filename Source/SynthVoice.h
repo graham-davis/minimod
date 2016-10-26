@@ -14,6 +14,11 @@
 #include "./SynthSound.h"
 #include "./Sine.h"
 #include "./Smooth.h"
+#include "./Faust/Saw.h"
+#include "./Faust/ModularSynth.h"
+#include "./Faust/FaustReverb.h"
+
+
 
 // The FM synth voice. The FM synth is hardcoded here but ideally it should be in its own class
 // to have a clear hierarchy (Sine -> FMSynth -> FMVoice)
@@ -29,6 +34,20 @@ struct SynthVoice : public SynthesiserVoice
             
             sinusoids[i].setSamplingRate(getSampleRate());
         }
+        
+        reverb.init(getSampleRate());
+        
+        modSynth.init(getSampleRate());
+        modSynth.buildUserInterface(&synthControl);
+
+        miniBuffer = new float*[2];
+        miniBuffer[0] = new float;
+        miniBuffer[1] = new float;
+    }
+    
+    ~SynthVoice()
+    {
+        delete [] miniBuffer;
     }
     
     bool canPlaySound (SynthesiserSound* sound) override
@@ -43,9 +62,11 @@ struct SynthVoice : public SynthesiserVoice
         level = velocity;
         onOff = true;
         
-        for(int i=0; i<4; i++) {
+        for(int i=0; i<9; i++) {
             smooth[i].setSmooth(0.999);
         }
+        
+        synthControl.setParamValue("/modSynth/gate", 1);
 
     }
     
@@ -69,25 +90,32 @@ struct SynthVoice : public SynthesiserVoice
     void renderNextBlock (AudioSampleBuffer& outputBuffer, int startSample, int numSamples) override
     {
         if (envelope != 0 || onOff) {
-            while (--numSamples >= 0){
-                envelope = smooth[0].tick(level);
-                for (int i=0; i<4; i++) {
-                    sinusoids[i].setFrequency(MidiMessage::getMidiNoteInHertz(midiFrequency+synthModules[i]->tune));
+            synthControl.setParamValue("/modSynth/freq0", MidiMessage::getMidiNoteInHertz(midiFrequency+synthModules[0]->tune));
+            synthControl.setParamValue("/modSynth/freq1", MidiMessage::getMidiNoteInHertz(midiFrequency+synthModules[1]->tune));
+            synthControl.setParamValue("/modSynth/freq2", MidiMessage::getMidiNoteInHertz(midiFrequency+synthModules[2]->tune));
+            synthControl.setParamValue("/modSynth/freq3", MidiMessage::getMidiNoteInHertz(midiFrequency+synthModules[3]->tune));
+            
+            synthControl.setParamValue("/modSynth/gain0", synthModules[0]->level);
+            synthControl.setParamValue("/modSynth/gain1", synthModules[1]->level);
+            synthControl.setParamValue("/modSynth/gain2", synthModules[2]->level);
+            synthControl.setParamValue("/modSynth/gain3", synthModules[3]->level);
+            
+            while (--numSamples >= 0) {
+                for (int i = outputBuffer.getNumChannels(); --i >= 0;) {
+                    modSynth.compute(1, NULL, miniBuffer);
+                    
+                    envelope = smooth[0].tick(level);
+                    double currentSample = miniBuffer[0][0] * envelope;
+                    outputBuffer.addSample(i, startSample, currentSample);
                 }
-                float currentSample = 0;
-                for (int i=0; i<4; i++) {
-                    currentSample += sinusoids[i].tick()*synthModules[i]->level;
-                }
-                currentSample = (currentSample / 4) * envelope;
-                for (int i = outputBuffer.getNumChannels(); --i >= 0;){
-                    outputBuffer.addSample (i, startSample, currentSample);
-                }
-                ++startSample;
-                
-                if(!onOff && envelope < 0.001){
+
+                if(!onOff && envelope < 0.0001){
                     envelope = 0;
+                    synthControl.setParamValue("/modSynth/gate", 0);
                     clearCurrentNote();
                 }
+                
+                ++startSample;
             }
         }
     }
@@ -105,10 +133,19 @@ private:
     float level;
     bool onOff;
     int midiFrequency;
+    double sawFrequency;
     int keyVelocity;
     float envelope;
-    Sine sinusoids[4];
-    Smooth smooth[4];
+    Sine sinusoids[3];
+    Smooth smooth[9];
+    
+    float **audioBuffer;
+    float **miniBuffer;
+    
+    FaustReverb reverb;
+    
+    ModularSynth modSynth;
+    MapUI synthControl;
     
     struct synthModule {
         int tune;

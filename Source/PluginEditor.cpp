@@ -61,7 +61,7 @@ void Hw3AudioProcessorEditor::resized()
     // Add Tabs to the canvas
     addAndMakeVisible(edit);
     addAndMakeVisible(perform);
-    
+        
     int tabHeight = 45;
     
     Rectangle<int> area = getLocalBounds();

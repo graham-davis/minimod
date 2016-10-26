@@ -11,6 +11,12 @@
               jucerVersion="4.2.4">
   <MAINGROUP id="yyE084" name="HW3">
     <GROUP id="{8B2B1700-778E-31AE-AAAD-7D3E29830ACE}" name="Source">
+      <GROUP id="{07D4C1FE-FFBC-CC1A-0D8A-2F90167A5938}" name="Faust">
+        <FILE id="mnaYN1" name="FaustReverb.h" compile="0" resource="0" file="Source/Faust/FaustReverb.h"/>
+        <FILE id="bnoSX9" name="ModularSynth.h" compile="0" resource="0" file="Source/Faust/ModularSynth.h"/>
+        <FILE id="ddKWb9" name="saw.dsp" compile="0" resource="1" file="Source/Faust/saw.dsp"/>
+        <FILE id="NwoTHt" name="Saw.h" compile="0" resource="0" file="Source/Faust/Saw.h"/>
+      </GROUP>
       <FILE id="OpJ8gj" name="Sine.h" compile="0" resource="0" file="Source/Sine.h"/>
       <FILE id="FOyStU" name="Smooth.h" compile="0" resource="0" file="Source/Smooth.h"/>
       <FILE id="iXif8M" name="SynthSound.h" compile="0" resource="0" file="Source/SynthSound.h"/>
